@@ -1,5 +1,3 @@
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,27 +8,53 @@ datasource db {
 }
 
 model User {
-  id        Int      @id
-  email     String   @unique
-  name      String?
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  contributions Contribution[]
+  id            String              @id
+  email         String              @unique
+  name          String?
+  role          Role                @default(USER)
+  createdAt     DateTime            @default(now())
+  contributions Contribution[]  
+  transactions  TransactionHistory[] 
+  adminGroups   GroupTarget[]       @relation("AdminOfGroup")
 }
 
 model Contribution {
-  id        Int      @id @default(autoincrement())
-  amount    Float
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
+  id            Int      @id @default(autoincrement())
+  amount        Float
+  userId        String 
+  user          User    @relation(fields: [userId], references: [id])
+  createdAt     DateTime @default(now())
+  transactions  TransactionHistory[]
 }
 
 model GroupTarget {
-  id        Int      @id @default(autoincrement())
-  target    Float
-  progress  Float    @default(0)
-  createdAt DateTime @default(now())
+  id            Int      @id @default(autoincrement())
+  target        Float
+  targetDate    DateTime
+  progress      Float    @default(0)
+  createdAt     DateTime @default(now())
+  adminId       String  
+  admin         User    @relation("AdminOfGroup", fields: [adminId], references: [id])
+  transactions  TransactionHistory[]
+}
+
+model TransactionHistory {
+  id              Int             @id @default(autoincrement())
+  type            TransactionType
+  amount          Float
+  contribution    Contribution?   @relation(fields: [contributionId], references: [id])
+  contributionId  Int?
+  user            User            @relation(fields: [userId], references: [id])
+  userId          String 
+  date            DateTime        @default(now())
+  group           GroupTarget     @relation(fields: [groupId], references: [id])
+  groupId         Int
+}
+
+enum TransactionType {
+  CONTRIBUTION
+  ADJUSTMENT
+  OTHER
 }
 
 enum Role {
