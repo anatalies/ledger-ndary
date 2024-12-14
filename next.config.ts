@@ -6,7 +6,8 @@ const nextConfig: NextConfig = {
     serverActions: {
       allowedOrigins: [
         'https://bug-free-space-doodle-7vvgp6pgx5q63p4-3000.app.github.dev/',
-        'localhost:3000'
+        'localhost:3000',
+        '127.0.0.1:3000'
       ]
     }
   }
