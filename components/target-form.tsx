@@ -6,6 +6,7 @@ import { Input } from './ui/input'
 import { DatePicker } from './date-picker'
 import { useState } from 'react'
 import { recordTarget } from '@/lib/actions'
+import SubmitButton from './submit-button'
 
 export default function TargetForm() {
     const [date, setDate] = useState<Date>()
@@ -14,13 +15,20 @@ export default function TargetForm() {
         setDate(date)
     }
 
+    const recordTargetWithDate = recordTarget.bind(null, date as Date )
+
     return (
-        <Form action={recordTarget} className='border rounded-md p-3 flex flex-col space-y-4 '>
+        <Form action={recordTargetWithDate} className='border rounded-md p-3 px-4 flex flex-col space-y-4 '>
             <div>
                 <Label>Set Target</Label>
                 <Input type='number' name='target' placeholder='KES'/>
             </div>
+            <div>
+                <Label>Target Name</Label>
+                <Input type='text' name='name' placeholder='1 Acre land'/>
+            </div>
             <DatePicker  handleDate = {handleDate}/>
+            <SubmitButton text='Set target'/>
         </Form>
     )
 }

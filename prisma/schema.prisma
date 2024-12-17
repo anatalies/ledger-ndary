@@ -30,6 +30,7 @@ model Contribution {
 model GroupTarget {
   id            Int      @id @default(autoincrement())
   target        Float
+  name          String   
   targetDate    DateTime
   progress      Float    @default(0)
   createdAt     DateTime @default(now())

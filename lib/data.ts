@@ -30,3 +30,15 @@ export async function getUser( ) {
         console.error(error)
     }
 }
+
+export async function getGroupTargets() {
+    const {userId} = await auth()
+
+    const targets = await db.groupTarget.findMany({
+        where: {
+            id: { gt: 0 }
+        }
+    })
+
+    return targets
+}
