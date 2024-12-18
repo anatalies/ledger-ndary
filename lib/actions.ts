@@ -58,6 +58,7 @@ export async function recordContribution(formData: FormData) {
     ])
 
     // TODO: CHECK IF GROUP TARGET IS REACHED
+    revalidatePath('/dashboard/contributions')
 }
 
 export async function recordTarget(targetDate: Date, formData: FormData) {

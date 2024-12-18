@@ -52,3 +52,19 @@ export async function getGroupTargets() {
 
     return targets
 }
+
+export async function getContributions() {
+    const contributions = await db.contribution.findMany({
+        include: {
+            user: true,
+            transactions: {
+                include: {
+                    group: true
+                }
+            }
+        }
+    })
+
+    // console.log(contributions)
+    return contributions
+}
