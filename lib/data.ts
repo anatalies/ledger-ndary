@@ -31,9 +31,19 @@ export async function getUser( ) {
     }
 }
 
-export async function getGroupTargets() {
-    const {userId} = await auth()
+export async function getAllUsers() {
+    const users = await db.user.findMany({
+        select: {
+            id: true,
+            name: true,
+            email: true
+        }
+    })
 
+    return users
+}
+
+export async function getGroupTargets() {
     const targets = await db.groupTarget.findMany({
         where: {
             id: { gt: 0 }

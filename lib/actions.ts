@@ -10,6 +10,56 @@ const targetFormSchema = z.object({
     name: z.string()
 })
 
+const contributionFormSchema = z.object({
+    userId: z.string(),
+    groupTargetId: z.coerce.number(),
+    amount: z.coerce.number()
+})
+
+export async function recordContribution(formData: FormData) {
+    const validatedContributionFormSchema = contributionFormSchema.safeParse({
+        userId: formData.get('userId'),
+        groupTargetId: formData.get('groupTargetId'),
+        amount: formData.get('amount')
+    })
+
+    if (!validatedContributionFormSchema.success) return
+
+    const {userId, groupTargetId, amount } = validatedContributionFormSchema.data
+    
+    // create contribution record
+    const contribution = await db.contribution.create({
+        data: {
+            userId: userId,
+            groupTargetId: groupTargetId,
+            amount: amount
+        }
+    })
+
+    await Promise.all([
+        // update group target
+        db.groupTarget.update({
+            where: { id: groupTargetId },
+            data: {
+                progress: { increment: amount }
+            }
+        }),
+
+        // record transaction in the history
+        db.transactionHistory.create({
+            data: {
+                type: 'CONTRIBUTION',
+                amount: amount,
+                userId: userId,
+                groupId: groupTargetId,
+                contributionId: contribution.id
+            }
+        })
+    ])
+
+    // TODO: CHECK IF GROUP TARGET IS REACHED
+}
+
 export async function recordTarget(targetDate: Date, formData: FormData) {
     const validatedTargetFormSchema = targetFormSchema.safeParse({
         target: formData.get('target'),

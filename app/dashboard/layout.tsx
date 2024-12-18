@@ -13,7 +13,7 @@ export default function DashboardLayout({
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}> 
                 <SidebarProvider>
                 <AppSidebar />
-                <main>
+                <main className="w-dvw">
                     <SidebarTrigger />
                     {children}
                 </main>
