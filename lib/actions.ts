@@ -72,12 +72,21 @@ export async function recordTarget(targetDate: Date, formData: FormData) {
     const { target, name } = validatedTargetFormSchema.data
 
     try {
-        await db.groupTarget.create({
+        const groupTarget = await db.groupTarget.create({
             data: {
                 target: target,
                 name: name,
                 targetDate: new Date(targetDate),
                 adminId: userId 
+            }
+        })
+            
+        await db.transactionHistory.create({
+            data: {
+                type: 'OTHER',
+                amount: target,
+                userId: userId,
+                groupId: groupTarget.id,
             }
         })
 

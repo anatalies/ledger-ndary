@@ -25,9 +25,12 @@ export default function TargetForm() {
             </div>
             <div>
                 <Label>Target Name</Label>
-                <Input type='text' name='name' placeholder='1 Acre land'/>
+                <Input type='text' name='name' placeholder='Land Project'/>
             </div>
-            <DatePicker  handleDate = {handleDate}/>
+            <div className=' flex flex-col space-y-1'>
+                <Label>Target Date</Label>
+                <DatePicker  handleDate = {handleDate}/>
+            </div>
             <SubmitButton text='Set target'/>
         </Form>
     )

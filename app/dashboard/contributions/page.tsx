@@ -15,7 +15,7 @@ export default async function Page() {
                         <p>{contribution.user.name}</p>
                         {contribution.transactions.map((transaction) => (
                             <div key={transaction.group.id}>
-                                <p>For: {transaction.group.name}</p>
+                                <p>{transaction.group.name}</p>
                             </div>
                         ))}
                         <p>{formatDistanceToNowStrict(contribution.createdAt)}</p>

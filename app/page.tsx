@@ -1,4 +1,3 @@
-import TargetForm from "@/components/target-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getUser } from "@/lib/data";
 
@@ -14,7 +13,6 @@ export default async function Home() {
           <CardTitle>500</CardTitle>
         </CardContent>
       </Card>
-      <TargetForm />
     </div>
-  );
+  )
 }

@@ -18,7 +18,7 @@ export default async function ContributionForm() {
                 <Label>Select User</Label>
                 <Select name='userId'>
                     <SelectTrigger>
-                        <SelectValue placeholder='e.g. Jane Doe'></SelectValue>
+                        <SelectValue placeholder='Jane Doe'></SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
@@ -36,7 +36,7 @@ export default async function ContributionForm() {
                 <Label>Contribution For:</Label>
                 <Select name='groupTargetId'>
                     <SelectTrigger>
-                        <SelectValue placeholder='e.g. Land'></SelectValue>
+                        <SelectValue placeholder='Land Project'></SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>

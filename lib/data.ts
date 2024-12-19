@@ -47,7 +47,8 @@ export async function getGroupTargets() {
     const targets = await db.groupTarget.findMany({
         where: {
             id: { gt: 0 }
-        }
+        },
+        orderBy: { createdAt: 'desc' }
     })
 
     return targets
@@ -62,7 +63,9 @@ export async function getContributions() {
                     group: true
                 }
             }
-        }
+
+        },
+        orderBy: { createdAt: 'desc' }
     })
 
     // console.log(contributions)
