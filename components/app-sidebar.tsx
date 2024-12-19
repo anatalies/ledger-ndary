@@ -1,4 +1,4 @@
-import { Crosshair, DollarSign, Home, Search, Settings } from "lucide-react"
+import { BadgeDollarSign, Crosshair, DollarSign, Home, Settings } from "lucide-react"
 
 import {
   Sidebar,
@@ -16,7 +16,7 @@ import {
 const items = [
   {
     title: "Home",
-    url: "/",
+    url: "/dashboard",
     icon: Home,
   },
   {
@@ -30,9 +30,9 @@ const items = [
     icon: DollarSign,
   },
   {
-    title: "Search",
-    url: "#",
-    icon: Search,
+    title: "Transactions",
+    url: "/dashboard/transactions",
+    icon: BadgeDollarSign,
   },
   {
     title: "Settings",

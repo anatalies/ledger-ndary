@@ -1,9 +1,22 @@
 import ContributionForm from "@/components/contribution-form";
-import { getContributions } from "@/lib/data";
+import Pagination from "@/components/pagination";
+import { getContributions, getContributionsPages } from "@/lib/data";
 import { formatDistanceToNowStrict } from "date-fns";
 
-export default async function Page() {
-    const contributions = await getContributions()
+export default async function Page(
+    props: {searchParams? : Promise<{
+        query?: string,
+        page?: string
+    }>}
+) {
+    const searchParams = await props.searchParams
+    const query =  searchParams?.query  || ''
+    const currentPage = Number(searchParams?.page) || 1
+    const [contributions, totalPages] = await Promise.all([
+        getContributions(currentPage),
+        getContributionsPages(query)
+    ])
+
     return (
         <div className="flex flex-col space-y-6 p-6 w-full">
             <ContributionForm />
@@ -21,6 +34,7 @@ export default async function Page() {
                         <p>{formatDistanceToNowStrict(contribution.createdAt)}</p>
                     </div>
                 ))}
+                <Pagination totalPages={totalPages} />
             </div>
         </div>
    ) 

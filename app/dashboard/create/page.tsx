@@ -1,13 +1,25 @@
+import Pagination from "@/components/pagination";
 import TargetForm from "@/components/target-form";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
-import { getGroupTargets } from "@/lib/data";
-import { differenceInDays, format, formatDistanceToNowStrict } from "date-fns";
+import { getGroupTargets, getGroupTargetsPages } from "@/lib/data";
+import { differenceInDays, formatDistanceToNowStrict } from "date-fns";
 
 
-export default async function Page() {
-    const groupTargets = await getGroupTargets()
+export default async function Page(
+    props: {searchParams? : Promise<{
+        query?: string,
+        page?: string
+    }>}
+) {
+    const searchParams = await props.searchParams
+    const query =  searchParams?.query  || ''
+    const currentPage = Number(searchParams?.page) || 1
+    const [groupTargets, totalPages] = await Promise.all([
+        getGroupTargets(currentPage),
+        getGroupTargetsPages(query)
+    ])
+
     if(!groupTargets ) return <p>cannot fetch targets!</p>
 
     return (
@@ -43,6 +55,7 @@ export default async function Page() {
                         </CardFooter>
                     </Card>
                 ))}
+                <Pagination totalPages={totalPages} />
             </div>
         </div>
     )
