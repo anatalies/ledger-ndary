@@ -2,6 +2,7 @@
 
 import { db } from "@/db"
 import { auth, currentUser } from "@clerk/nextjs/server"
+import { endOfMonth, format } from "date-fns"
 
 export async function getUser( ) {
     const { userId } = await auth()
@@ -42,19 +43,61 @@ export async function getAllUsers() {
         }
     })
 
-    return users
+    let count = 0
+
+    users.forEach((user) => (
+        count++
+    ))
+
+    return { users, count }
 }
 
 export async function getGroupTargets(currentPage: number) {
     const validPage = currentPage && currentPage > 0 ? currentPage : 1;
     
     const targets = await db.groupTarget.findMany({
-        skip: (validPage - 1) * 3,
-        take: 3,
+        skip: (validPage - 1) * 4,
+        take: 4,
         orderBy: { createdAt: 'desc' }
     })
 
     return targets
+}
+
+export async function getGroupTargets2() {
+    const targets = await db.groupTarget.findMany({
+        select: {
+            id: true,
+            name: true
+        },
+        orderBy: { createdAt: 'desc' }
+    })
+
+    return targets
+}
+
+export async function getGroupTargetsCount() {
+    const count = await db.groupTarget.count({})
+    return count
+}
+
+export async function getContributionsCount() {
+    let totalContributions = 0
+    const count = await db.contribution.count({})
+    const contributions = await db.contribution.findMany({
+        select: { amount: true }
+    })
+
+    contributions.forEach((contribution) => (
+        totalContributions += contribution.amount
+    ))
+
+    return { count, totalContributions }
+}
+
+export async function getTransactionsCount() {
+    const count = await db.transactionHistory.count({})
+    return count
 }
 
 
@@ -96,7 +139,7 @@ export async function getGroupTargetsPages(query: string) {
         })
 
         // Calculate the total number of pages
-        const totalPages = Math.ceil(count / 3)
+        const totalPages = Math.ceil(count / 4)
         return totalPages
 
     } catch (error) {
@@ -182,4 +225,42 @@ export async function getTransactionPages(query: string) {
     } catch (error) {
         throw error;
     }
+}
+
+export async function fetchContributionsForChart( month: string ) {
+    const firstDayOfMonth = new Date(
+        `${new Date().getFullYear()}-${month}-01 00:00:00`
+    )
+    const lastDayOfMonth = endOfMonth(firstDayOfMonth)
+
+    const contributions = await db.contribution.findMany({
+        where: {
+            createdAt: {
+                gte: firstDayOfMonth,
+                lte: lastDayOfMonth
+            }
+        },
+        select: {
+            createdAt: true,
+            amount: true
+        }
+    })
+
+    // Group contributions by date
+    const groupedContributions: { [date: string]: number } = {};
+
+    contributions.forEach((contribution) => {
+        const date = format(new Date(contribution.createdAt), 'yyyy-MM-dd'); // Group by full date
+        if (!groupedContributions[date]) {
+            groupedContributions[date] = 0;
+        }
+        groupedContributions[date] += contribution.amount; // Sum the amount for the same day
+    });
+
+    const chartData = Object.entries(groupedContributions).map(([date, amount]) => ({
+        date: format(new Date(date), 'dd'), 
+        amount
+    }))
+
+    return chartData
 }

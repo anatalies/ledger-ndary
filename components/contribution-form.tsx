@@ -1,4 +1,4 @@
-import { getAllUsers, getGroupTargets } from '@/lib/data'
+import { getAllUsers, getGroupTargets2 } from '@/lib/data'
 import  Form  from 'next/form'
 import { Label } from './ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from './ui/select'
@@ -9,21 +9,21 @@ import { recordContribution } from '@/lib/actions'
 export default async function ContributionForm() {
     const [users, groupTargets] = await Promise.all([
         getAllUsers(),
-        getGroupTargets()
+        getGroupTargets2()
     ])
 
     return (
         <Form action={recordContribution} className='border rounded-md p-3 px-4 flex flex-col space-y-3'>
             <div>
                 <Label>Select User</Label>
-                <Select name='userId'>
+                <Select name='userId' required >
                     <SelectTrigger>
                         <SelectValue placeholder='Jane Doe'></SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
                             <SelectLabel>Users</SelectLabel>
-                            {users.map((user) => (
+                            {users.users.map((user) => (
                                 <SelectItem value={user.id} key={user.id}>
                                     {user.name}
                                 </SelectItem>
@@ -34,7 +34,7 @@ export default async function ContributionForm() {
             </div>
             <div>
                 <Label>Contribution For:</Label>
-                <Select name='groupTargetId'>
+                <Select name='groupTargetId' required >
                     <SelectTrigger>
                         <SelectValue placeholder='Land Project'></SelectValue>
                     </SelectTrigger>
@@ -52,7 +52,7 @@ export default async function ContributionForm() {
             </div>
             <div>
                 <Label>Amount</Label>
-                <Input type='number' name='amount' placeholder='KES'/>
+                <Input type='number' name='amount' placeholder='KES' required />
             </div>
             <SubmitButton text='Submit' />
         </Form>

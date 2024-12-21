@@ -21,11 +21,11 @@ export default function TargetForm() {
         <Form action={recordTargetWithDate} className='border rounded-md p-3 px-4 flex flex-col space-y-4 '>
             <div>
                 <Label>Set Target</Label>
-                <Input type='number' name='target' placeholder='KES'/>
+                <Input required type='number' name='target' placeholder='KES'/>
             </div>
             <div>
                 <Label>Target Name</Label>
-                <Input type='text' name='name' placeholder='Land Project'/>
+                <Input required type='text' name='name' placeholder='Land Project'/>
             </div>
             <div className=' flex flex-col space-y-1'>
                 <Label>Target Date</Label>
